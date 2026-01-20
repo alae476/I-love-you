@@ -1,65 +1,47 @@
-function startScene() {
-  document.getElementById("message").style.display = "none";
-  document.getElementById("scene").style.display = "block";
-  initScene();
-}
+// إعداد المشهد والكاميرا والمصير (renderer)
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
 
-function initScene() {
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf0f8ff); // خلفية سماوية
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.z = 5;
 
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 2, 5);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.getElementById("scene").appendChild(renderer.domElement);
+// إضافة إضاءة
+const light = new THREE.PointLight(0xffffff, 1);
+light.position.set(10, 10, 10);
+scene.add(light);
 
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
+const ambient = new THREE.AmbientLight(0x404040, 2);
+scene.add(ambient);
 
-  // إضاءة
-  const light = new THREE.PointLight(0xffffff, 1);
-  light.position.set(5, 10, 5);
-  scene.add(light);
+// تحميل الكعكة
+const mtlLoader = new THREE.MTLLoader();
+mtlLoader.setPath('models/');
+mtlLoader.load('cake.mtl', (materials) => {
+  materials.preload();
 
-  // طاولة بيضاء
-  const tableGeometry = new THREE.CylinderGeometry(3, 3, 0.2, 32);
-  const tableMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
-  const table = new THREE.Mesh(tableGeometry, tableMaterial);
-  table.position.y = -1;
-  scene.add(table);
-
-  // تحميل الكعكة مع الخامات
-  const mtlLoader = new THREE.MTLLoader();
-  mtlLoader.setPath('models/'); // مجلد الملفات
-  mtlLoader.load('cake.mtl', function(materials) {
-    materials.preload();
-
-    const objLoader = new THREE.OBJLoader();
-    objLoader.setMaterials(materials);
-    objLoader.setPath('models/');
-    objLoader.load('cake.obj', function(object) {
-      object.scale.set(0.5, 0.5, 0.5); // تصغير الحجم
-      object.position.y = -0.5;        // وضعها فوق الطاولة
-      scene.add(object);
-    });
+  const objLoader = new THREE.OBJLoader();
+  objLoader.setMaterials(materials);
+  objLoader.setPath('models/');
+  objLoader.load('cake.obj', (object) => {
+    object.scale.set(0.5, 0.5, 0.5);
+    scene.add(object);
   });
+});
 
-  // بالونات ملونة
-  const balloonColors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00];
-  for (let i = 0; i < 4; i++) {
-    const balloonGeometry = new THREE.SphereGeometry(0.3, 16, 16);
-    const balloonMaterial = new THREE.MeshPhongMaterial({ color: balloonColors[i] });
-    const balloon = new THREE.Mesh(balloonGeometry, balloonMaterial);
-    balloon.position.set(Math.cos(i * Math.PI/2) * 2, 1.5, Math.sin(i * Math.PI/2) * 2);
-    scene.add(balloon);
-  }
-
-  function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-  }
-  animate();
+// حلقة الرسم
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
 }
+animate();
+
+// إعادة ضبط الحجم عند تغيير نافذة المتصفح
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
