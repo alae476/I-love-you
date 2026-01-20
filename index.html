@@ -1,19 +1,46 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>عيد ميلاد سعيد 🎂</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Birthday Celebration</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-  <div id="message">
-    <h1>🎉 عيد ميلاد سعيد يا صديقي!</h1>
-    <button onclick="startScene()">استمرار</button>
-  </div>
-  <div id="scene" style="display:none;"></div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="script.js"></script>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-birthday-cake"></i> Happy Birthday!</h1>
+            <p>Enjoy this 3D birthday celebration scene. Click and drag to look around!</p>
+        </header>
+        
+        <main class="scene-container">
+            <div id="scene"></div>
+            
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> Controls</h3>
+                <ul>
+                    <li><i class="fas fa-mouse-pointer"></i> <strong>Left Click + Drag</strong> - Rotate view</li>
+                    <li><i class="fas fa-mouse-pointer"></i> <strong>Right Click + Drag</strong> - Pan view</li>
+                    <li><i class="fas fa-mouse-wheel"></i> <strong>Scroll Wheel</strong> - Zoom in/out</li>
+                    <li><i class="fas fa-lightbulb"></i> <strong>Spacebar</strong> - Toggle lights</li>
+                    <li><i class="fas fa-play"></i> <strong>R key</strong> - Start/stop balloon rotation</li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>Created with Three.js | GitHub Pages 3D Scene</p>
+            <div class="model-status">
+                <span id="model-load-status"><i class="fas fa-spinner fa-spin"></i> Loading cake model...</span>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
 </body>
 </html>
